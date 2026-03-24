@@ -1,12 +1,12 @@
 # claude-memorize
 
-A Claude Code slash command that lets you save and replay operational recipes — exact steps you've performed successfully — so you never have to research them from scratch again.
+A Claude Code plugin that lets you save and replay operational recipes — exact steps you've performed successfully — so you never have to research them from scratch again.
 
 ## How it works
 
 After Claude successfully completes a multi-step operation (e.g. syncing ArgoCD, pushing an ECR image, restarting a deployment), you can save those steps as a named recipe. Next time, recall the recipe by name and Claude executes the steps for you, prompting only for variable inputs.
 
-The installer also patches `~/.claude/CLAUDE.md` so Claude automatically checks for matching recipes before researching any operational task from scratch, and suggests saving steps after success.
+The plugin patches `~/.claude/CLAUDE.md` so Claude automatically checks for matching recipes before researching any operational task from scratch, and suggests saving steps after success.
 
 Save and recall operations are delegated to a **Claude Haiku** subagent — keeping costs low while the main model handles conversation and decision-making.
 
@@ -14,32 +14,32 @@ Save and recall operations are delegated to a **Claude Haiku** subagent — keep
 
 - [Claude Code](https://claude.ai/code) installed and configured
 - `bash` (macOS/Linux)
-- `python3` (used by the installer to update `~/.claude/settings.json`)
-- `git` (for the one-liner install)
+- `python3` (only needed for manual install)
+- `git` (only needed for manual install)
 
 ## Installation
 
-### One-liner (recommended)
+### Plugin install (recommended)
+
+```
+/plugin install github:grinfeld/claude-memorize
+```
+
+Then run the post-install setup once to initialize recipe storage and inject behavior rules:
+
+```bash
+~/.claude/plugins/memorize/install.sh
+```
+
+### Manual install
 
 ```bash
 git clone https://github.com/grinfeld/claude-memorize.git /tmp/claude-memorize && \
-  chmod +x /tmp/claude-memorize/install.sh && \
-  /tmp/claude-memorize/install.sh && \
+  MANUAL_INSTALL=1 /tmp/claude-memorize/install.sh && \
   rm -rf /tmp/claude-memorize
 ```
 
-### Manual
-
-```bash
-git clone https://github.com/grinfeld/claude-memorize.git
-cd claude-memorize
-chmod +x install.sh
-./install.sh
-```
-
-If you prefer to install manually without running the installer, copy `memorize.md` to `~/.claude/commands/memorize.md` and create the `~/.claude/commands/memorize/` directory. Note: manually-installed setups won't have subcommand autocomplete for existing recipes until the installer is run.
-
-### What the installer sets up
+### What gets set up
 
 - `~/.claude/commands/memorize.md` — command prompt Claude reads when you invoke `/memorize`
 - `~/.claude/commands/memorize/<name>.md` — per-recipe subcommands for autocomplete (auto-maintained)
@@ -151,10 +151,10 @@ You can edit recipe files directly — they're just Markdown.
 
 ## Updating
 
-```bash
-git clone https://github.com/grinfeld/claude-memorize.git /tmp/claude-memorize && \
-  /tmp/claude-memorize/install.sh && \
-  rm -rf /tmp/claude-memorize
 ```
+/plugin update memorize
+```
+
+Then re-run `install.sh` if the post-install setup has changed.
 
 Existing recipes and `index.md` are never overwritten. The `CLAUDE.md` block is only appended once (idempotent check on the `## Memorize Skill` marker).

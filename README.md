@@ -25,6 +25,8 @@ Save and recall operations are delegated to a **Claude Haiku** subagent — keep
 /plugin install github:grinfeld/claude-memorize
 ```
 
+> **Note**: `/plugin install` does not automatically apply permissions from the plugin's `settings.json`. Without running `install.sh`, Claude will prompt for approval every time it reads or saves a recipe. Make sure to run the post-install script below.
+
 Then run the post-install setup once to initialize recipe storage and inject behavior rules:
 
 ```bash
@@ -46,7 +48,7 @@ git clone https://github.com/grinfeld/claude-memorize.git /tmp/claude-memorize &
 - `~/.claude/skills/memorize/index.md` — auto-maintained recipe index
 - `~/.claude/skills/memorize/recipes/` — individual recipe files
 - `~/.claude/CLAUDE.md` — appended with memorize behavior rules (idempotent)
-- `~/.claude/settings.json` — `Write(~/.claude/commands/memorize/*)` permission added so Claude never prompts for approval when saving a recipe subcommand
+- `~/.claude/settings.json` — `Write(~/.claude/commands/memorize/*)`, `Read(~/.claude/skills/memorize/index.md)`, and `Read(~/.claude/skills/memorize/recipes/*)` permissions added so Claude never prompts for approval when reading or saving recipes
 
 ## Usage
 

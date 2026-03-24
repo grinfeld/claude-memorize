@@ -21,7 +21,18 @@ Steps:
 3. Extract the logical steps. Generalize hardcoded values into `<placeholder>` format where appropriate (e.g. `<app-name>`, `<namespace>`, `<image-tag>`).
 4. Write the recipe to `~/.claude/skills/memorize/recipes/<name>.md` using the template below.
 5. Update `~/.claude/skills/memorize/index.md` — add or update the entry for `<name>`.
-6. Confirm to the user: "Recipe `<name>` saved."
+6. Write a subcommand file to `~/.claude/commands/memorize/<name>.md` with this content (substituting actual name and description):
+   ```
+   ---
+   description: <description>
+   ---
+   Execute memorize recall for recipe `<name>`:
+   1. Read `~/.claude/skills/memorize/recipes/<name>.md`
+   2. Present the steps to the user
+   3. Ask for any `<placeholder>` values before proceeding
+   4. Execute the steps using the appropriate tools
+   ```
+7. Confirm to the user: "Recipe `<name>` saved."
 
 **Recipe template:**
 ```markdown
@@ -80,7 +91,8 @@ Steps:
 1. Confirm with the user before deleting.
 2. Delete `~/.claude/skills/memorize/recipes/<name>.md`.
 3. Remove the entry from `~/.claude/skills/memorize/index.md`.
-4. Confirm: "Recipe `<name>` deleted."
+4. Delete `~/.claude/commands/memorize/<name>.md` if it exists.
+5. Confirm: "Recipe `<name>` deleted."
 
 ---
 

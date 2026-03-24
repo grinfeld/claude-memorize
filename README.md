@@ -28,14 +28,16 @@ chmod +x install.sh
 ./install.sh
 ```
 
-If you prefer to install manually without running the installer, copy `memorize.md` to `~/.claude/commands/memorize.md`. That's all that's needed for `/memorize` to appear in Claude Code.
+If you prefer to install manually without running the installer, copy `memorize.md` to `~/.claude/commands/memorize.md` and create the `~/.claude/commands/memorize/` directory. Note: manually-installed setups won't have subcommand autocomplete for existing recipes until the installer is run.
 
 ### What the installer sets up
 
 - `~/.claude/commands/memorize.md` — command prompt Claude reads when you invoke `/memorize`
+- `~/.claude/commands/memorize/<name>.md` — per-recipe subcommands for autocomplete (auto-maintained)
 - `~/.claude/skills/memorize/index.md` — auto-maintained recipe index
 - `~/.claude/skills/memorize/recipes/` — individual recipe files
 - `~/.claude/CLAUDE.md` — appended with memorize behavior rules (idempotent)
+- `~/.claude/settings.json` — `Write(~/.claude/commands/memorize/*)` permission added so Claude never prompts for approval when saving a recipe subcommand
 
 ## Usage
 
@@ -56,6 +58,13 @@ Claude looks back through the conversation, extracts the steps that succeeded, g
 ```
 
 Claude reads the recipe, shows you the steps, asks for any `<placeholder>` values, then executes them.
+
+Each saved recipe also registers as a subcommand, so you get autocomplete:
+
+```
+/memorize/sync_   →  /memorize/sync_argocd
+/memorize/push_   →  /memorize/push_ecr_image
+```
 
 You can also reference recipes naturally in conversation:
 
@@ -102,6 +111,10 @@ You can edit recipe files directly — they're just Markdown.
 ```
 ~/.claude/commands/
   memorize.md                  ← command prompt (Claude reads this on /memorize)
+  memorize/
+    sync_argocd.md             ← autocomplete subcommand (/memorize/sync_argocd)
+    push_ecr_image.md          ← autocomplete subcommand (/memorize/push_ecr_image)
+    ...                        ← auto-created on save, auto-deleted on delete
 
 ~/.claude/skills/memorize/
   index.md                     ← searchable recipe index

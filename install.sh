@@ -46,23 +46,32 @@ if [ "${MANUAL_INSTALL:-0}" = "1" ]; then
   cp "$SCRIPT_DIR/commands/memorize.md" "$COMMAND_FILE"
   echo "Copied command file to $COMMAND_FILE."
 
-  PERMISSION="Write(~/.claude/commands/memorize/*)"
-  python3 - "$SETTINGS_FILE" "$PERMISSION" <<'PYEOF'
+  python3 - "$SETTINGS_FILE" <<'PYEOF'
 import json, sys
-settings_file, permission = sys.argv[1], sys.argv[2]
+settings_file = sys.argv[1]
+permissions_to_add = [
+    "Write(~/.claude/commands/memorize/*)",
+    "Read(~/.claude/skills/memorize/index.md)",
+    "Read(~/.claude/skills/memorize/recipes/*)",
+]
 try:
     with open(settings_file) as f:
         d = json.load(f)
 except FileNotFoundError:
     d = {}
 allows = d.setdefault("permissions", {}).setdefault("allow", [])
-if permission not in allows:
-    allows.append(permission)
+added = []
+for permission in permissions_to_add:
+    if permission not in allows:
+        allows.append(permission)
+        added.append(permission)
+if added:
     with open(settings_file, "w") as f:
         json.dump(d, f, indent=2)
-    print(f"Added permission: {permission}")
+    for p in added:
+        print(f"Added permission: {p}")
 else:
-    print("Permission already present — skipped.")
+    print("All permissions already present — skipped.")
 PYEOF
 fi
 

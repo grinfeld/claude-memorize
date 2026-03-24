@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Write(~/.claude/commands/memorize/*)"
+      "Write(~/.claude/commands/memorize/*)",
+      "Read(~/.claude/skills/memorize/index.md)",
+      "Read(~/.claude/skills/memorize/recipes/*)"
     ]
   }
 }

@@ -1,6 +1,6 @@
 ---
 description: Save, recall, list, search, or delete step recipes across sessions
-argument-hint: [name] [description]
+argument-hint: $(awk -F'|' 'NR>3 && NF>2 {gsub(/ /,"",$2); print $2}' ~/.claude/skills/memorize/index.md | tr '\n' ' ' | sed 's/^/list search delete /') [description]
 ---
 
 You are executing the `/memorize` command. Read the invocation carefully and follow the appropriate mode below.

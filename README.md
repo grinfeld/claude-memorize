@@ -82,7 +82,6 @@ Each recipe is a plain Markdown file at `~/.claude/skills/memorize/recipes/<name
 **Description**: Sync an ArgoCD application from the CLI
 **Tags**: argocd, gitops, k8s
 **Last updated**: 2026-03-24
-**Times used**: 3
 
 ## Steps
 

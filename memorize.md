@@ -30,7 +30,6 @@ Steps:
 **Description**: <description>
 **Tags**: <comma-separated relevant tags>
 **Last updated**: <today's date>
-**Times used**: 0
 
 ## Steps
 
@@ -55,7 +54,6 @@ Steps:
 2. Present the steps to the user.
 3. If the recipe contains `<placeholder>` values, ask the user to supply them before proceeding.
 4. Execute the steps using the appropriate tools (Bash, Edit, Write, etc.).
-5. After successful execution, increment `Times used` in the recipe file by 1 and update `Last updated`.
 
 ---
 

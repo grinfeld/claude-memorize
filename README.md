@@ -41,6 +41,24 @@ git clone https://github.com/grinfeld/claude-memorize.git /tmp/claude-memorize &
   rm -rf /tmp/claude-memorize
 ```
 
+### Adding permissions manually (without install.sh)
+
+If you prefer not to run `install.sh`, add the following entries to `~/.claude/settings.json` yourself:
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "Write(~/.claude/commands/memorize/*)",
+      "Read(~/.claude/skills/memorize/index.md)",
+      "Read(~/.claude/skills/memorize/recipes/*)"
+    ]
+  }
+}
+```
+
+If the file already has a `permissions.allow` array, append the three entries to it.
+
 ### What gets set up
 
 - `~/.claude/commands/memorize.md` — command prompt Claude reads when you invoke `/memorize`

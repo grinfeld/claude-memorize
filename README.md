@@ -126,6 +126,83 @@ Claude will check the index and recall the best match automatically.
 /memorize delete sync_argocd      # delete a recipe (asks for confirmation)
 ```
 
+### Full Example
+
+My first request to claude
+
+    ❯ Let me check ArgoCD sync status directly.
+    ⏺ Let me get the current context and ArgoCD app status.                                                                                                                                                                  
+    ⏺ Bash(kubectl config current-context)                                                                                                                                                                                   
+    ⎿  arn:aws:eks:us-east-1:123456789012:cluster/my-eks
+    ⏺ Bash(kubectl --context arn:aws:eks:us-east-1:123456789012:cluster/my-eks get application something-wrong -n argocd -o jsonpath='{.status.sync.status}{"\n"}{.s…)
+    ⎿  Error: Exit code 1                                                                                                                                                                                                  
+    error: the server doesn't have a resource type "application"                                                                                                                                                        
+    ⏺ Bash(kubectl --context arn:aws:eks:us-east-1:123456789012:cluster/my-eks get applications.argoproj.io something-wrong -n argocd -o jsonpath='Sync: {.status.sy…)                                                
+    ⎿  Interrupted · What should Claude do instead?                                                                                                                                                                        
+    ❯ check argocd is synced for myargocd-app                                                                                                                                                                            
+    ⏺ Bash(kubectl --context arn:aws:eks:us-east-1:123456789012:cluster/my-eks get applications.argoproj.io myargocd-app -n argocd -o jsonpath='Sync: {.status.sy…)                                                
+    ⎿  Error: Exit code 1                                                                                                                                                                                                  
+    error: the server doesn't have a resource type "applications"                                                                                                                                                       
+    ⏺ Bash(kubectl --context arn:aws:eks:us-east-1:123456789012:cluster/my-eks api-resources | grep argo)                                                                                                              
+    ⎿  No matches found                                                                                                                                                                                                    
+    ⏺ Bash(kubectl --context arn:aws:eks:us-east-1:123456789012:cluster/my-eks api-resources | grep -i application)                                                                                                    
+    ⎿  applicationnetworkpolicies          anp            networking.k8s.aws/v1alpha1               true         ApplicationNetworkPolicy                                                                                  
+    ⏺ ArgoCD CRDs are not installed on this cluster. ArgoCD may be running on a different cluster, or it's not deployed here.
+
+    Do you know which cluster ArgoCD is on? I can check available contexts with kubectl config get-contexts.                                                                                                               
+    
+    ✻ Worked for 30s                                                                                                                                                                                                         
+    
+    ❯ i know the profile argo-profile                                                                                                                                                                                          
+    ⏺ Bash(kubectl config get-contexts | grep argo-profile)                                                                                                                                                                    
+      ⎿            argo-profile                                                 arn:aws:eks:us-east-1:09876543210:cluster/argo-profile      arn:aws:eks:us-east-1:09876543210:cluster/argo-profile                               
+    ⏺ Bash(kubectl --context argo-profile get applications.argoproj.io myargocd-app -n argocd -o jsonpath='Sync: {.status.sync.status}{"\n"}Health: {.status.health.statu…)                                                
+      ⎿  Error: Exit code 1                                                                                                                                                                                                  
+         Error from server (NotFound): namespaces "argocd" not found                                                                                                                                                         
+    ⏺ Bash(kubectl --context argo-profile get namespaces | grep -i argo)                                                                                                                                                       
+      ⎿  argocd-dev     Active        85d                                                                                                                                                                                
+         argocd-in-prod        Terminating   85d                                                                                                                                                                                
+    ⏺ Bash(kubectl --context argo-profile get applications.argoproj.io myargocd-app -n argocd-dev -o jsonpath='Sync: {.status.sync.status}{"\n"}Health: {.status.heal…)                                                
+      ⎿  Error: Exit code 1                                                                                                                                                                                                  
+         Error from server (NotFound): applications.argoproj.io "myargocd-app" not found                                                                                                                                 
+    ⏺ Bash(kubectl --context argo-profile get applications.argoproj.io -n argocd-dev | grep -i data-factory)                                                                                                               
+      ⎿  data-myargocd-app                   Synced        Healthy                                                                                                                                                       
+    ⏺ data-myargocd-app is Synced and Healthy.                                                                                                                                                                           
+    
+    ✻ Churned for 46s                                                                                                                                                                                                      
+                                                                                                                                                                                                                             
+    ❯ memorize the action for checking dat-myargocd-app is synced                                                                                                                                                        
+    ⏺ I'll memorize these steps using the memorize skill.                                                                                                                                                                    
+    ⏺ Skill(/memorize)                                                                                                                                                                                                       
+      ⎿  Successfully loaded skill                                                                                                                                                                                           
+    ⏺ Let me read the index first, then save the recipe.
+      Read 1 file (ctrl+o to expand)                                                                                                                                                                                         
+      Read 1 file (ctrl+o to expand)                                                                                                                                                                                         
+    ⏺ No existing recipe with that name. I'll delegate the write to a Haiku subagent.                                                                                                                                        
+    ⏺ Agent(Save ArgoCD recipe files) arn:aws:bedrock: us-east-1:09876543210:application-inference-profile/j6z4oxri7drp                                                                                                      
+      ⎿  Done (2 tool uses · 0 tokens · 6s)                                                                                                                                                                                  
+      (ctrl+o to expand)                                                                                                                                                                                                     
+    ⏺ Agent(Save ArgoCD recipe files)                                                                                                                                                                                        
+      ⎿  Done (7 tool uses · 7.6k tokens · 39s)                                                                                                                                                                              
+      (ctrl+o to expand)                                                                                                                                                                                                     
+    ⏺ Recipe argocd-check-myargocd-app saved. You can now run /argocd-check-myargocd-app to check the sync status directly.                                                                                          
+                                                                                                                                                                                                                             
+    ✻ Cogitated for 1m 49s
+
+My Second request to claude
+
+    ❯ /memorize:argocd-check-myargocd-app                                                                                                                                                                                
+    ⏺ Let me fetch the tool schema and read the recipe in parallel.                                                                                                                                                          
+      Read 1 file (ctrl+o to expand)                                                                                                                                                                                         
+    ⏺ No placeholders needed. Executing the steps now.                                                                                                                                                                       
+    ⏺ Running the steps from the recipe.
+    ⏺ Bash(kubectl --context my-context get applications.argoproj.io my-app -n argocd-xxxxx -o jsonpath='Sync: {.status.sync.status}{"\n"}Health: {.status…)                                                
+      ⎿  Sync: Synced                                                                                                                                                                                                        
+         Health: Healthy                                                                                                                                                                                                     
+    ⏺ my-app is in good shape:                                                                                                                                                                                
+      - Sync: Synced                                                                                                                                                                                                         
+      - Health: Healthy
+
 ## Recipe format
 
 Each recipe is a plain Markdown file at `~/.claude/skills/memorize/recipes/<name>.md`:

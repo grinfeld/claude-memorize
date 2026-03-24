@@ -1,25 +1,26 @@
 #!/usr/bin/env bash
-# install.sh — sets up the memorize skill for Claude Code
+# install.sh — sets up the memorize command for Claude Code
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-SKILL_DIR="$HOME/.claude/skills/memorize"
-SKILL_FILE="$HOME/.claude/skills/memorize.md"
+RECIPE_DIR="$HOME/.claude/skills/memorize"
+COMMAND_FILE="$HOME/.claude/commands/memorize.md"
 GLOBAL_CLAUDE_MD="$HOME/.claude/CLAUDE.md"
 MARKER="## Memorize Skill"
 
-echo "Installing memorize skill..."
+echo "Installing memorize command..."
 
-# Create skill directory and recipes subfolder
-mkdir -p "$SKILL_DIR/recipes"
+# Create commands directory and recipes subfolder
+mkdir -p "$HOME/.claude/commands"
+mkdir -p "$RECIPE_DIR/recipes"
 
-# Copy skill prompt
-cp "$SCRIPT_DIR/memorize.md" "$SKILL_FILE"
+# Copy command prompt
+cp "$SCRIPT_DIR/memorize.md" "$COMMAND_FILE"
 
 # Copy (or init) the index if it doesn't exist yet
-if [ ! -f "$SKILL_DIR/index.md" ]; then
-  cp "$SCRIPT_DIR/index.md" "$SKILL_DIR/index.md"
+if [ ! -f "$RECIPE_DIR/index.md" ]; then
+  cp "$SCRIPT_DIR/index.md" "$RECIPE_DIR/index.md"
   echo "Initialized empty recipe index."
 else
   echo "Existing index.md preserved (not overwritten)."
@@ -34,42 +35,12 @@ else
   echo "Appended memorize rules to $GLOBAL_CLAUDE_MD."
 fi
 
-# Register skill in ~/.claude/settings.json
-SETTINGS_FILE="$HOME/.claude/settings.json"
-SKILL_ENTRY="{\"name\":\"memorize\",\"description\":\"Save, recall, list, search, or delete step recipes across sessions.\",\"prompt_file\":\"~/.claude/skills/memorize.md\"}"
-
-if [ ! -f "$SETTINGS_FILE" ]; then
-  echo "{\"skills\":[$SKILL_ENTRY]}" > "$SETTINGS_FILE"
-  echo "Created $SETTINGS_FILE with memorize skill."
-elif python3 -c "
-import json, sys
-data = json.load(open('$SETTINGS_FILE'))
-skills = data.get('skills', [])
-if any(s.get('name') == 'memorize' for s in skills):
-    sys.exit(1)
-" 2>/dev/null; then
-  python3 - <<PYEOF
-import json
-path = '$SETTINGS_FILE'
-entry = $SKILL_ENTRY
-with open(path) as f:
-    data = json.load(f)
-data.setdefault('skills', []).append(entry)
-with open(path, 'w') as f:
-    json.dump(data, f, indent=2)
-print("Registered memorize skill in", path)
-PYEOF
-else
-  echo "memorize skill already registered in $SETTINGS_FILE — skipped."
-fi
-
 echo ""
-echo "Done. Skill installed at:"
-echo "  Skill prompt : $SKILL_FILE"
-echo "  Recipes      : $SKILL_DIR/recipes/"
-echo "  Index        : $SKILL_DIR/index.md"
-echo "  CLAUDE.md    : $GLOBAL_CLAUDE_MD (memorize block appended)"
-echo "  settings.json: $SETTINGS_FILE (memorize skill registered)"
+echo "Done. Command installed at:"
+echo "  Command prompt: $COMMAND_FILE"
+echo "  Recipes       : $RECIPE_DIR/recipes/"
+echo "  Index         : $RECIPE_DIR/index.md"
+echo "  CLAUDE.md     : $GLOBAL_CLAUDE_MD (memorize block appended)"
 echo ""
 echo "Usage inside Claude Code:"
 echo "  /memorize <name> <description>   — save steps from current conversation"

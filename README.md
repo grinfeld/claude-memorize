@@ -1,6 +1,6 @@
 # claude-memorize
 
-A Claude Code skill that lets you save and replay operational recipes — exact steps you've performed successfully — so you never have to research them from scratch again.
+A Claude Code slash command that lets you save and replay operational recipes — exact steps you've performed successfully — so you never have to research them from scratch again.
 
 ## How it works
 
@@ -28,29 +28,14 @@ chmod +x install.sh
 ./install.sh
 ```
 
-If you prefer to register the skill manually without running the installer, add the following entry to `~/.claude/settings.json` under a `skills` array:
-
-```json
-{
-  "skills": [
-    {
-      "name": "memorize",
-      "description": "Save, recall, list, search, or delete step recipes across sessions.",
-      "prompt_file": "~/.claude/skills/memorize.md"
-    }
-  ]
-}
-```
-
-This makes `/memorize` appear in the Claude Code `/` command list.
+If you prefer to install manually without running the installer, copy `memorize.md` to `~/.claude/commands/memorize.md`. That's all that's needed for `/memorize` to appear in Claude Code.
 
 ### What the installer sets up
 
-- `~/.claude/skills/memorize.md` — skill prompt Claude reads when you invoke `/memorize`
+- `~/.claude/commands/memorize.md` — command prompt Claude reads when you invoke `/memorize`
 - `~/.claude/skills/memorize/index.md` — auto-maintained recipe index
 - `~/.claude/skills/memorize/recipes/` — individual recipe files
 - `~/.claude/CLAUDE.md` — appended with memorize behavior rules (idempotent)
-- `~/.claude/settings.json` — `/memorize` registered as a user-invocable skill so it appears in the `/` command list (idempotent)
 
 ## Usage
 
@@ -116,17 +101,18 @@ You can edit recipe files directly — they're just Markdown.
 ## File layout after install
 
 ```
-~/.claude/skills/
-  memorize.md                  ← skill prompt (Claude reads this on /memorize)
-  memorize/
-    index.md                   ← searchable recipe index
-    recipes/
-      sync_argocd.md
-      push_ecr_image.md
-      ...
+~/.claude/commands/
+  memorize.md                  ← command prompt (Claude reads this on /memorize)
+
+~/.claude/skills/memorize/
+  index.md                     ← searchable recipe index
+  recipes/
+    sync_argocd.md
+    push_ecr_image.md
+    ...
 ```
 
-## Updating the skill
+## Updating
 
 ```bash
 git clone https://github.com/grinfeld/claude-memorize.git /tmp/claude-memorize && \

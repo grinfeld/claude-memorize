@@ -8,6 +8,13 @@ After Claude successfully completes a multi-step operation (e.g. syncing ArgoCD,
 
 The installer also patches `~/.claude/CLAUDE.md` so Claude automatically checks for matching recipes before researching any operational task from scratch, and suggests saving steps after success.
 
+## Prerequisites
+
+- [Claude Code](https://claude.ai/code) installed and configured
+- `bash` (macOS/Linux)
+- `python3` (used by the installer to update `~/.claude/settings.json`)
+- `git` (for the one-liner install)
+
 ## Installation
 
 ### One-liner (recommended)
@@ -50,6 +57,22 @@ After Claude has successfully completed something:
 ```
 
 Claude looks back through the conversation, extracts the steps that succeeded, generalizes hardcoded values into `<placeholders>`, and saves them as `~/.claude/skills/memorize/recipes/sync_argocd.md`.
+
+If you omit the description, Claude uses your last message as the description:
+
+```
+/memorize get-pods
+```
+
+This is handy when your last prompt already describes what you did (e.g. "get all pods in the kube-system namespace").
+
+You can also just ask Claude in plain language:
+
+> "memorize this as get-pods"
+> "save what you just did into /memorize as get-pods"
+> "store the last steps in /memorize with name get-pods"
+
+Claude will invoke `/memorize get-pods` using your last message as the description.
 
 ### Recall and execute a saved recipe
 

@@ -11,9 +11,11 @@ The arguments are: $ARGUMENTS
 
 ## Invocation Modes
 
-### 1. Save mode — `/memorize <name> <description>`
+### 1. Save mode — `/memorize <name> [description]`
 
 Example: `/memorize sync_argocd Store steps for syncing an ArgoCD application`
+
+If no description is provided, use the user's last message as the description.
 
 Steps:
 1. Read `~/.claude/skills/memorize/index.md` to check if a recipe named `<name>` already exists.
@@ -56,6 +58,8 @@ Steps:
 ---
 
 ### 2. Recall mode — `/memorize <name>`
+
+> **Disambiguation:** when only a name is given (no description), check if `~/.claude/skills/memorize/recipes/<name>.md` exists. If it does → recall mode. If it doesn't → save mode using the last user message as the description.
 
 Example: `/memorize sync_argocd`
 

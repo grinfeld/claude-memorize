@@ -8,6 +8,8 @@ After Claude successfully completes a multi-step operation (e.g. syncing ArgoCD,
 
 The installer also patches `~/.claude/CLAUDE.md` so Claude automatically checks for matching recipes before researching any operational task from scratch, and suggests saving steps after success.
 
+Save and recall operations are delegated to a **Claude Haiku** subagent — keeping costs low while the main model handles conversation and decision-making.
+
 ## Prerequisites
 
 - [Claude Code](https://claude.ai/code) installed and configured

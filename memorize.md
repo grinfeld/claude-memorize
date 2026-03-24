@@ -21,10 +21,15 @@ Steps:
 1. Read `~/.claude/skills/memorize/index.md` to check if a recipe named `<name>` already exists.
 2. Look back through the **current conversation** and identify all tool calls, bash commands, and actions that succeeded and are relevant to `<description>`.
 3. Extract the logical steps. Generalize hardcoded values into `<placeholder>` format where appropriate (e.g. `<app-name>`, `<namespace>`, `<image-tag>`).
-4. Write the recipe to `~/.claude/skills/memorize/recipes/<name>.md` using the template below.
-5. Update `~/.claude/skills/memorize/index.md` — add or update the entry for `<name>`.
-6. Write a subcommand file to `~/.claude/commands/memorize/<name>.md` with this content (substituting actual name and description):
+4. Delegate steps 4–6 to a Haiku subagent (faster and cheaper for file writes):
    ```
+   Use the Agent tool with model: "haiku" and prompt:
+   "Write the following recipe to ~/.claude/skills/memorize/recipes/<name>.md:
+   <recipe content using template below>
+
+   Then update ~/.claude/skills/memorize/index.md — add or update the row for <name> with description, tags, and today's date.
+
+   Then write ~/.claude/commands/memorize/<name>.md with this content:
    ---
    description: <description>
    ---
@@ -33,8 +38,9 @@ Steps:
    2. Present the steps to the user
    3. Ask for any `<placeholder>` values before proceeding
    4. Execute the steps using the appropriate tools
+   "
    ```
-7. Confirm to the user: "Recipe `<name>` saved."
+5. Confirm to the user: "Recipe `<name>` saved."
 
 **Recipe template:**
 ```markdown
@@ -68,7 +74,14 @@ Steps:
    - If not found, search `~/.claude/skills/memorize/index.md` for a close match and suggest it.
 2. Present the steps to the user.
 3. If the recipe contains `<placeholder>` values, ask the user to supply them before proceeding.
-4. Execute the steps using the appropriate tools (Bash, Edit, Write, etc.).
+4. Delegate execution to a Haiku subagent:
+   ```
+   Use the Agent tool with model: "haiku" and prompt:
+   "Execute the following steps exactly, substituting any placeholder values provided:
+   <steps with placeholders replaced>
+
+   Use Bash, Edit, Write, and other tools as needed. Report back with what was done."
+   ```
 
 ---
 

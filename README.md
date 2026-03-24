@@ -28,12 +28,29 @@ chmod +x install.sh
 ./install.sh
 ```
 
+If you prefer to register the skill manually without running the installer, add the following entry to `~/.claude/settings.json` under a `skills` array:
+
+```json
+{
+  "skills": [
+    {
+      "name": "memorize",
+      "description": "Save, recall, list, search, or delete step recipes across sessions.",
+      "prompt_file": "~/.claude/skills/memorize.md"
+    }
+  ]
+}
+```
+
+This makes `/memorize` appear in the Claude Code `/` command list.
+
 ### What the installer sets up
 
 - `~/.claude/skills/memorize.md` — skill prompt Claude reads when you invoke `/memorize`
 - `~/.claude/skills/memorize/index.md` — auto-maintained recipe index
 - `~/.claude/skills/memorize/recipes/` — individual recipe files
 - `~/.claude/CLAUDE.md` — appended with memorize behavior rules (idempotent)
+- `~/.claude/settings.json` — `/memorize` registered as a user-invocable skill so it appears in the `/` command list (idempotent)
 
 ## Usage
 

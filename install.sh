@@ -34,12 +34,42 @@ else
   echo "Appended memorize rules to $GLOBAL_CLAUDE_MD."
 fi
 
+# Register skill in ~/.claude/settings.json
+SETTINGS_FILE="$HOME/.claude/settings.json"
+SKILL_ENTRY="{\"name\":\"memorize\",\"description\":\"Save, recall, list, search, or delete step recipes across sessions.\",\"prompt_file\":\"~/.claude/skills/memorize.md\"}"
+
+if [ ! -f "$SETTINGS_FILE" ]; then
+  echo "{\"skills\":[$SKILL_ENTRY]}" > "$SETTINGS_FILE"
+  echo "Created $SETTINGS_FILE with memorize skill."
+elif python3 -c "
+import json, sys
+data = json.load(open('$SETTINGS_FILE'))
+skills = data.get('skills', [])
+if any(s.get('name') == 'memorize' for s in skills):
+    sys.exit(1)
+" 2>/dev/null; then
+  python3 - <<PYEOF
+import json
+path = '$SETTINGS_FILE'
+entry = $SKILL_ENTRY
+with open(path) as f:
+    data = json.load(f)
+data.setdefault('skills', []).append(entry)
+with open(path, 'w') as f:
+    json.dump(data, f, indent=2)
+print("Registered memorize skill in", path)
+PYEOF
+else
+  echo "memorize skill already registered in $SETTINGS_FILE — skipped."
+fi
+
 echo ""
 echo "Done. Skill installed at:"
 echo "  Skill prompt : $SKILL_FILE"
 echo "  Recipes      : $SKILL_DIR/recipes/"
 echo "  Index        : $SKILL_DIR/index.md"
 echo "  CLAUDE.md    : $GLOBAL_CLAUDE_MD (memorize block appended)"
+echo "  settings.json: $SETTINGS_FILE (memorize skill registered)"
 echo ""
 echo "Usage inside Claude Code:"
 echo "  /memorize <name> <description>   — save steps from current conversation"

@@ -62,12 +62,12 @@ If the file already has a `permissions.allow` array, append the three entries to
 After Claude has successfully completed something:
 
 ```
-/memorize sync_argocd Store steps for syncing an ArgoCD application
+/memorize get-pods Store steps for getting pods in your dev cluster
 ```
 
-Claude looks back through the conversation, extracts the steps that succeeded, generalizes hardcoded values into `<placeholders>`, and saves them as `~/.claude/skills/memorize/recipes/sync_argocd.md`.
+Claude looks back through the conversation, extracts the steps that succeeded, generalizes hardcoded values into `<placeholders>`, and saves them as `~/.claude/skills/memorize/recipes/get-pods.md`.
 
-If you omit the description, Claude uses your last message as the description:
+If you omit the description, Claude infers it semantically from your last prompt or the overall prompt sequence:
 
 ```
 /memorize get-pods

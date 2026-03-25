@@ -4,11 +4,11 @@
 
 ## Overview
 
-claude-memorize is a Claude Code plugin that saves and replays operational step recipes locally on your machine. It does not collect, transmit, or share any personal data.
+claude-memorize is a Claude Code skill that saves and replays operational step recipes locally on your machine. It does not collect, transmit, or share any personal data.
 
 ## Data Collected
 
-This plugin does not collect any data. All information is stored exclusively on your local machine in the following locations:
+This skill does not collect any data. All information is stored exclusively on your local machine in the following locations:
 
 - `~/.claude/skills/memorize/index.md` — recipe index
 - `~/.claude/skills/memorize/recipes/` — individual recipe files
@@ -18,13 +18,26 @@ This plugin does not collect any data. All information is stored exclusively on 
 
 Recipe files may contain command-line steps, placeholder names, and notes you choose to save. This content never leaves your machine.
 
+## Permissions
+
+`install.sh` adds the following entries to `~/.claude/settings.json` so Claude never prompts for approval when reading or writing recipes:
+
+- `Read(~/.claude/commands/memorize/*)` — read per-recipe subcommand files
+- `Write(~/.claude/commands/memorize/*)` — create/delete per-recipe subcommand files
+- `Read(~/.claude/skills/memorize/index.md)` — read the recipe index
+- `Write(~/.claude/skills/memorize/index.md)` — update the recipe index
+- `Read(~/.claude/skills/memorize/recipes/*)` — read saved recipes
+- `Write(~/.claude/skills/memorize/recipes/*)` — save and delete recipes
+
+No other paths are accessed.
+
 ## No Network Access
 
-This plugin does not make any network requests. It reads and writes local files only.
+This skill does not make any network requests. It reads and writes local files only.
 
 ## No Third-Party Sharing
 
-No data is shared with the plugin author, Anthropic, or any third party.
+No data is shared with the author, Anthropic, or any third party.
 
 ## Claude AI Processing
 

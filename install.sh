@@ -1,26 +1,33 @@
 #!/usr/bin/env bash
-# install.sh — post-install setup for claude-memorize plugin
+# install.sh — setup for claude-memorize
 #
-# If you installed via `/plugin install`, run this once to:
-#   1. Initialize the recipe storage directory
-#   2. Append memorize behavior rules to ~/.claude/CLAUDE.md
-#
-# If you are installing manually (without the plugin system), this script
-# also copies the command file and adds the Write permission to settings.json.
+# Run once to:
+#   1. Copy the /memorize command to ~/.claude/commands/
+#   2. Initialize the recipe storage directory
+#   3. Append memorize behavior rules to ~/.claude/CLAUDE.md
+#   4. Add required permissions to ~/.claude/settings.json
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 RECIPE_DIR="$HOME/.claude/skills/memorize"
 GLOBAL_CLAUDE_MD="$HOME/.claude/CLAUDE.md"
+COMMAND_FILE="$HOME/.claude/commands/memorize.md"
+SETTINGS_FILE="$HOME/.claude/settings.json"
 MARKER="## Memorize Skill"
 
 echo "Setting up claude-memorize..."
 
-# Initialize recipe storage
+# Create directories
 mkdir -p "$RECIPE_DIR/recipes"
 mkdir -p "$HOME/.claude/commands/memorize"
 
+# Copy command file
+mkdir -p "$HOME/.claude/commands"
+cp "$SCRIPT_DIR/commands/memorize.md" "$COMMAND_FILE"
+echo "Copied command file to $COMMAND_FILE."
+
+# Initialize recipe index
 if [ ! -f "$RECIPE_DIR/index.md" ]; then
   cp "$SCRIPT_DIR/index.md" "$RECIPE_DIR/index.md"
   echo "Initialized empty recipe index."
@@ -37,22 +44,17 @@ else
   echo "Appended memorize rules to $GLOBAL_CLAUDE_MD."
 fi
 
-# --- Manual install only (skip if using /plugin install) ---
-COMMAND_FILE="$HOME/.claude/commands/memorize.md"
-SETTINGS_FILE="$HOME/.claude/settings.json"
-
-if [ "${MANUAL_INSTALL:-0}" = "1" ]; then
-  mkdir -p "$HOME/.claude/commands"
-  cp "$SCRIPT_DIR/commands/memorize.md" "$COMMAND_FILE"
-  echo "Copied command file to $COMMAND_FILE."
-
-  python3 - "$SETTINGS_FILE" <<'PYEOF'
+# Add permissions to settings.json
+python3 - "$SETTINGS_FILE" <<'PYEOF'
 import json, sys
 settings_file = sys.argv[1]
 permissions_to_add = [
+    "Read(~/.claude/commands/memorize/*)",
     "Write(~/.claude/commands/memorize/*)",
     "Read(~/.claude/skills/memorize/index.md)",
+    "Write(~/.claude/skills/memorize/index.md)",
     "Read(~/.claude/skills/memorize/recipes/*)",
+    "Write(~/.claude/skills/memorize/recipes/*)",
 ]
 try:
     with open(settings_file) as f:
@@ -73,10 +75,9 @@ if added:
 else:
     print("All permissions already present — skipped.")
 PYEOF
-fi
 
 echo ""
 echo "Done."
 echo "  Recipes : $RECIPE_DIR/recipes/"
 echo "  Index   : $RECIPE_DIR/index.md"
-echo "  CLAUDE.md block appended."
+echo "  Command : $COMMAND_FILE"

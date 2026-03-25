@@ -1,5 +1,8 @@
-## Memorize Plugin
+## Memorize Skill
 
-- Before starting any operational task, scan `${CLAUDE_SKILL_DIR}/../../skills/` for a matching recipe and check if a relevant skill exists. If found, suggest using it.
-- After completing any multi-step operational task successfully, suggest to the user: "Want me to memorize these steps? Run `/memorize:save <suggested-name> <description>`"
-- If the user says "from memory" or "use memorized steps", invoke the matching `/memorize:<name>` skill.
+- Before starting any operational task, read `~/.claude/skills/memorize/index.md`
+  and check if a matching recipe exists. If found, use it instead of researching from scratch.
+- After completing any multi-step operational task successfully, suggest to the user:
+  "Want me to memorize these steps? Run `/memorize <suggested-name> <description>`"
+- If the user says "from memory" or "use memorized steps" in any prompt, check
+  `~/.claude/skills/memorize/index.md` for a matching recipe and recall it.

@@ -83,6 +83,8 @@ You can also just ask Claude in plain language:
 
 Claude will invoke `/memorize get-pods` using your last message as the description.
 
+![get-pods example](example.png)
+
 ### Recall and execute a saved recipe
 
 ```

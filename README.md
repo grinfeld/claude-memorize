@@ -17,7 +17,7 @@ Save and recall operations are delegated to a **Claude Haiku** subagent — keep
 /plugin install memorize@grinfeld
 ```
 
-That's it. No shell scripts, no manual permission setup.
+Then restart Claude Code to load the plugin. Skills are injected at session start, so the plugin won't be available until you begin a new session.
 
 ## Prerequisites
 

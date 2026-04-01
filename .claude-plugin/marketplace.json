@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "grinfeld",
+  "description": "Michael Grinfeld's Claude Code plugins",
+  "owner": {
+    "name": "Michael Grinfeld",
+    "url": "https://github.com/grinfeld"
+  },
+  "plugins": [
+    {
+      "name": "memorize",
+      "description": "Save and replay operational step recipes across sessions",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}

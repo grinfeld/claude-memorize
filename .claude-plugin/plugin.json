@@ -1,0 +1,13 @@
+{
+  "name": "memorize",
+  "description": "Save and replay operational step recipes across sessions. Stores multi-step operations as named recipes so Claude can recall and execute them on demand.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Michael Grinfeld",
+    "url": "https://github.com/grinfeld"
+  },
+  "repository": "https://github.com/grinfeld/claude-memorize",
+  "homepage": "https://github.com/grinfeld/claude-memorize",
+  "license": "Apache-2.0",
+  "keywords": ["memory", "recipes", "productivity", "operations"]
+}

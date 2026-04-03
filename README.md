@@ -18,8 +18,15 @@ Claude Code ships with two built-in memory mechanisms:
 | **What it produces** | Notes about the project | Reusable runbooks with `<placeholders>` |
 | **How you replay it** | Not replayable — informational only | `/memorize:<name>` re-executes the steps |
 | **Management UI** | `/memory` panel | `/memorize list/search/delete` commands |
+| **Cost impact** | Neutral (passive notes) | Saves tokens on repeated tasks |
 
 Use auto-memory for passive context. Use `claude-memorize` when you want Claude to re-run a known procedure without researching it from scratch.
+
+### How it saves costs
+
+Without memorized recipes, every time you ask Claude to perform a familiar operation (e.g. "check ArgoCD sync status"), it starts from scratch: explores the cluster, tries commands, recovers from errors, and reasons through the result. That research loop burns hundreds to thousands of tokens per run.
+
+With a saved recipe, Claude reads a short Markdown file and executes the known steps directly — no exploration, no retries. Additionally, the save/recall operations themselves are delegated to **Claude Haiku** (the cheapest model), keeping the overhead of the plugin itself minimal.
 
 ## How it works
 

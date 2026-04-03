@@ -2,6 +2,25 @@
 
 A Claude Code plugin that lets you save and replay operational recipes — exact steps you've performed successfully — so you never have to research them from scratch again.
 
+## vs. Claude Code's built-in `/memory` and auto-memory
+
+Claude Code ships with two built-in memory mechanisms:
+
+- **Auto-memory** — Claude automatically notes things it discovers (build commands, code style, project context) into `~/.claude/projects/<hash>/memory/`. These are passive observations about the environment.
+- **`/memory` command** — a panel to view, edit, and toggle those auto-generated notes, plus your `CLAUDE.md` instruction files.
+
+`claude-memorize` is different in focus:
+
+| | Built-in auto-memory | claude-memorize |
+|---|---|---|
+| **What's stored** | Observations (facts, context) | Operational recipes (step-by-step procedures) |
+| **Who triggers it** | Claude, automatically | You, explicitly after a successful task |
+| **What it produces** | Notes about the project | Reusable runbooks with `<placeholders>` |
+| **How you replay it** | Not replayable — informational only | `/memorize:<name>` re-executes the steps |
+| **Management UI** | `/memory` panel | `/memorize list/search/delete` commands |
+
+Use auto-memory for passive context. Use `claude-memorize` when you want Claude to re-run a known procedure without researching it from scratch.
+
 ## How it works
 
 After Claude successfully completes a multi-step operation (e.g. syncing ArgoCD, pushing an ECR image, restarting a deployment), you can save those steps as a named recipe. Next time, recall the recipe by name and Claude executes the steps for you, prompting only for variable inputs.

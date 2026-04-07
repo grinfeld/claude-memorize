@@ -1,7 +1,7 @@
 ---
 name: memorize
 description: Save, recall, list, search, or delete step recipes across sessions
-argument-hint: [name] [description]
+argument-hint: "[name] [description]"
 ---
 
 You are executing the `/memorize` skill. Read the invocation carefully and follow the appropriate mode below.
